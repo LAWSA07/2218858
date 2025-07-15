@@ -1,4 +1,4 @@
-# Affordmed Campus Hiring Evaluation – Full Stack URL Shortener
+# Affordmed – Full Stack URL Shortener
 
 ## Overview
 This project is a full stack URL shortener built for the Affordmed Campus Hiring Evaluation. It includes:
@@ -63,6 +63,4 @@ This project is a full stack URL shortener built for the Affordmed Campus Hiring
 - All secrets/config in `.env` files
 - No authentication required for backend endpoints (per Affordmed instructions)
 
----
-
-**Good luck!** 
+--

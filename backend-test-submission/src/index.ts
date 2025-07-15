@@ -3,12 +3,14 @@ import { Log } from 'logging-middleware/dist/logger';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 
 const LOG_TOKEN = process.env.LOG_TOKEN || '';
 console.log('Loaded LOG_TOKEN:', LOG_TOKEN ? LOG_TOKEN.slice(0, 8) + '...' : '(empty)');
 
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 const HOST = `http://localhost:${PORT}`;
 

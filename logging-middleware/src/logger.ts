@@ -1,6 +1,6 @@
+// Use Array.from(...).includes for readonly tuples to fix TS linter errors
 import axios from 'axios';
 
-// Allowed values
 const stacks = ['backend', 'frontend'] as const;
 const levels = ['debug', 'info', 'warn', 'error', 'fatal'] as const;
 const backendPackages = ['cache', 'controller', 'cron_job', 'db', 'domain', 'handler', 'repository', 'route', 'service'] as const;
@@ -23,15 +23,15 @@ interface LogParams {
 }
 
 function isValidStack(stack: string): stack is Stack {
-  return stacks.includes(stack as Stack);
+  return Array.from(stacks).includes(stack as Stack);
 }
 function isValidLevel(level: string): level is Level {
-  return levels.includes(level as Level);
+  return Array.from(levels).includes(level as Level);
 }
 function isValidPackage(pkg: string, stack: Stack): pkg is Package {
-  if (commonPackages.includes(pkg as CommonPackage)) return true;
-  if (stack === 'backend' && backendPackages.includes(pkg as BackendPackage)) return true;
-  if (stack === 'frontend' && frontendPackages.includes(pkg as FrontendPackage)) return true;
+  if (Array.from(commonPackages).includes(pkg as CommonPackage)) return true;
+  if (stack === 'backend' && Array.from(backendPackages).includes(pkg as BackendPackage)) return true;
+  if (stack === 'frontend' && Array.from(frontendPackages).includes(pkg as FrontendPackage)) return true;
   return false;
 }
 
@@ -58,9 +58,16 @@ export async function Log(stack: string, level: string, pkg: string, message: st
         },
       }
     );
-  } catch (error) {
-    // Optionally, handle/log error locally (but do not use console.log)
-    // For now, just rethrow
+  } catch (error: any) {
+    // If logging fails (e.g., 401, network error), do not throw, just continue
+    if (error.response && error.response.status === 401) {
+      // Optionally, you could log to a local file or ignore
+      return;
+    }
+    if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+      return;
+    }
+    // For other errors, rethrow
     throw error;
   }
 } 
